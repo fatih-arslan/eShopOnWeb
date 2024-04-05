@@ -44,4 +44,7 @@ public class Order : BaseEntity, IAggregateRoot
         }
         return total;
     }
+
+    public OrderStatus Status { get; private set; } = OrderStatus.Pending;
+
 }

@@ -1,0 +1,35 @@
+﻿@page "/admin/orders"
+@attribute [Authorize(Roles = BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS)]
+@inherits BlazorAdmin.Helpers.BlazorComponent
+@namespace BlazorAdmin.Pages.OrderPage
+
+<h3>Orders</h3>
+@if(orders.Count == 0)
+{  
+    <Spinner></Spinner>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr style="text-align: center">
+                <th>Order Date</th>
+                <th>User</th>
+                <th>Total Price</th>
+                <th>Order Status</th>
+            </tr>
+        </thead>
+        <tbody class="cursor-pointer">
+            @foreach (var order in orders)
+            {
+                <tr style="text-align: center">
+                    <td>@order.OrderDate</td>
+                    <td>@order.BuyerId</td>
+                    <td>@order.Total</td>
+                    <td>@order.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

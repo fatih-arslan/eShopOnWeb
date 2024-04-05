@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -25,13 +26,22 @@ public class HttpService
     public async Task<T> HttpGet<T>(string uri)
         where T : class
     {
-        var result = await _httpClient.GetAsync($"{_apiUrl}{uri}");
-        if (!result.IsSuccessStatusCode)
+        var url = $"{_apiUrl}{uri}";
+        try
         {
-            return null;
-        }
+            var result = await _httpClient.GetAsync(url);
+            if (!result.IsSuccessStatusCode)
+            {
+                return null;
+            }
+            return await FromHttpResponseMessage<T>(result);
 
-        return await FromHttpResponseMessage<T>(result);
+        }
+        catch(Exception ex) 
+        {            
+            Console.WriteLine(ex.Message);
+            return null;
+        }       
     }
 
     public async Task<T> HttpDelete<T>(string uri, int id)
