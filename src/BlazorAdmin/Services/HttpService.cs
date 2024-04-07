@@ -27,6 +27,10 @@ public class HttpService
         where T : class
     {
         var url = $"{_apiUrl}{uri}";
+
+        //var response = await _httpClient.GetAsync(url);
+        //var jsonString = await response.Content.ReadAsStringAsync();
+
         try
         {
             var result = await _httpClient.GetAsync(url);
@@ -90,6 +94,7 @@ public class HttpService
 
         return await FromHttpResponseMessage<T>(result);
     }
+
 
     private StringContent ToJson(object obj)
     {

@@ -11,6 +11,7 @@ public class OrderFilterSpecification : Specification<Order>
 {
     public OrderFilterSpecification(string? buyerId)
     {
-        Query.Where(o => (buyerId == null || o.BuyerId == buyerId));
+        Query
+            .Where(o => (buyerId == null || o.BuyerId == buyerId));
     }
 }

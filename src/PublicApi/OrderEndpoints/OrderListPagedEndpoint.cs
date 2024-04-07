@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
-using Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 using MinimalApi.Endpoint;
 
 namespace Microsoft.eShopWeb.PublicApi.OrderEndpoints;

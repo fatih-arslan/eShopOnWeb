@@ -98,4 +98,6 @@ public class CatalogContextSeed
                 new(2,5, "Prism White TShirt", "Prism White TShirt", 12, "http://catalogbaseurltobereplaced/images/products/12.png")
             };
     }
+
+
 }

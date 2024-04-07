@@ -22,5 +22,10 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Total, options => options.MapFrom(src => src.Total()))
             .ForMember(dest => dest.Status, options => options.MapFrom(src => src.Status.ToString()))
             .ForMember(dest => dest.OrderDate, options => options.MapFrom(src => src.OrderDate.ToString("dd/MM/yyyy")));
+        CreateMap<OrderItem, OrderItemDto>()
+            .ForMember(dest => dest.Total, options => options.MapFrom(src => src.UnitPrice * src.Units))
+            .ForMember(dest => dest.ProductName, options => options.MapFrom(src => src.ItemOrdered.ProductName));
+        CreateMap<Order, OrderItemsDto>()
+            .ForMember(dest => dest.OrderId, options => options.MapFrom(src => src.Id));
     }
 }

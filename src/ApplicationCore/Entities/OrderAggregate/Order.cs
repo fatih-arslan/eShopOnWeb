@@ -47,4 +47,9 @@ public class Order : BaseEntity, IAggregateRoot
 
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
 
+    public void UpdateStatus(OrderStatus status)
+    {
+        Status = status;
+    }
+
 }

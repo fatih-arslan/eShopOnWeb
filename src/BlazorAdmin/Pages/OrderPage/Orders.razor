@@ -2,6 +2,7 @@
 @attribute [Authorize(Roles = BlazorShared.Authorization.Constants.Roles.ADMINISTRATORS)]
 @inherits BlazorAdmin.Helpers.BlazorComponent
 @namespace BlazorAdmin.Pages.OrderPage
+@using BlazorShared
 
 <h3>Orders</h3>
 @if(orders.Count == 0)
@@ -27,9 +28,92 @@ else
                     <td>@order.BuyerId</td>
                     <td>@order.Total</td>
                     <td>@order.Status</td>
+                    <td><button type="button" class="btn btn-primary" @onclick="() => ShowOrderDetails(order.Id)">Details</button></td>                  
                 </tr>
             }
         </tbody>
     </table>
 }
 
+@{
+    async Task CallUpdateOrder(int orderId, OrderStatus status)
+    {
+        var response = await UpdateOrder(new UpdateOrderRequest { Id = orderId, Status = status });
+        showDetailsModal = false;
+        ShowUpdateResultModal();
+        await ReloadOrders();
+    }
+}
+
+@if (showDetailsModal)
+{
+    <style>
+        td {
+            padding: 0 20px; 
+        }
+
+        th {
+            padding: 0 20px;
+        }
+    </style>
+    <div class="modal" tabindex="-1" style="display:block;" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Order Details</h5>
+                    <button type="button" class="close" @onclick="CloseDetailsModal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Units</th>
+                                <th>Total Price</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (orderItems != null)
+                            {
+                                @foreach (var item in orderItems.Items)
+                                {
+                                    <tr>
+                                        <td>@item.ProductName</td>
+                                        <td>@item.Units</td>
+                                        <td>@item.Total</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    @{
+                        var status = orders.Where(o => o.Id == orderItems.OrderId).FirstOrDefault().Status;
+                        if (status != OrderStatus.Approved.ToString())
+                        {
+                            <td> <button type="button" class="btn btn-success" @onclick="(() => CallUpdateOrder(orderItems.OrderId, OrderStatus.Approved))">Approve Order</button></td>
+                        }
+                        if(status != OrderStatus.CanceledByAdmin.ToString())
+                        {
+                            <td> <button type="button" class="btn btn-danger" @onclick="(() => CallUpdateOrder(orderItems.OrderId, OrderStatus.CanceledByAdmin))">Cancel Order</button></td>
+                        }
+                    }                    
+                    <button type="button" class="btn btn-secondary" @onclick="CloseDetailsModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (showUpdateResultModal)
+{
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;">
+        <div style="background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p>@updateResult</p>
+            <button @onclick="CloseUpdateResultModal">Close</button>
+        </div>
+    </div>
+}
