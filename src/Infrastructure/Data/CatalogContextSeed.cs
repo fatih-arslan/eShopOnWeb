@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.eShopWeb.Infrastructure.Data;
@@ -41,6 +43,20 @@ public class CatalogContextSeed
             {
                 await catalogContext.CatalogItems.AddRangeAsync(
                     GetPreconfiguredItems());
+
+                await catalogContext.SaveChangesAsync();
+            }
+            if(!await catalogContext.OrderItems.AnyAsync() && await catalogContext.CatalogItems.AnyAsync())
+            {
+                await catalogContext.OrderItems.AddRangeAsync(
+                    GetPreconfiguredOrderItems(catalogContext.CatalogItems.ToList()));
+
+                await catalogContext.SaveChangesAsync();
+            }
+            if (!await catalogContext.Orders.AnyAsync() && await catalogContext.OrderItems.AnyAsync())
+            {
+                await catalogContext.Orders.AddRangeAsync(
+                    GetPreconfiguredOrders(catalogContext.OrderItems.ToList()));
 
                 await catalogContext.SaveChangesAsync();
             }
@@ -99,5 +115,94 @@ public class CatalogContextSeed
             };
     }
 
+    static IEnumerable<OrderItem> GetPreconfiguredOrderItems(List<CatalogItem> catalogItems)
+    {
+        return new List<OrderItem>
+        {
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[0].Id,
+                catalogItems[0].Name,
+                catalogItems[0].PictureUri),
+                catalogItems[0].Price,
+                2),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[1].Id,
+                catalogItems[1].Name,
+                catalogItems[1].PictureUri),
+                catalogItems[1].Price,
+                1),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[2].Id,
+                catalogItems[2].Name,
+                catalogItems[2].PictureUri),
+                catalogItems[2].Price,
+                2),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[3].Id,
+                catalogItems[3].Name,
+                catalogItems[3].PictureUri),
+                catalogItems[3].Price,
+                1),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[4].Id,
+                catalogItems[4].Name,
+                catalogItems[4].PictureUri),
+                catalogItems[4].Price,
+                2),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[5].Id,
+                catalogItems[5].Name,
+                catalogItems[5].PictureUri),
+                catalogItems[5].Price,
+                1),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[6].Id,
+                catalogItems[6].Name,
+                catalogItems[6].PictureUri),
+                catalogItems[6].Price,
+                2),
+            new OrderItem(
+                itemOrdered: new CatalogItemOrdered(
+                catalogItems[7].Id,
+                catalogItems[7].Name,
+                catalogItems[7].PictureUri),
+                catalogItems[7].Price,
+                1)
 
+        };
+    }
+
+    static IEnumerable<Order> GetPreconfiguredOrders(List<OrderItem> orderItems)
+    {
+        return new List<Order>
+            {
+                new (
+                    buyerId: "1", 
+                    shipToAddress: new Address("Street1", "City1", "State1", "Country1", "123"),
+                    items: orderItems.GetRange(0, 2)
+                    ),
+                new (
+                    buyerId: "2",
+                    shipToAddress: new Address("Street1", "City1", "State1", "Country1", "123"),
+                    items: orderItems.GetRange(2, 2)
+                    ),
+                new (
+                    buyerId: "3",
+                    shipToAddress: new Address("Street1", "City1", "State1", "Country1", "123"),
+                    items: orderItems.GetRange(4, 2)
+                    ),
+                new (
+                    buyerId: "4",
+                    shipToAddress: new Address("Street1", "City1", "State1", "Country1", "123"),
+                    items: orderItems.GetRange(6, 2)
+                    )
+            };
+    }
 }
