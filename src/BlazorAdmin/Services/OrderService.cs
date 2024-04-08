@@ -26,13 +26,6 @@ public class OrderService : IOrderService
         return orderResponse.Orders;
     }
 
-    public async Task<List<Order>> ListPaged()
-    {
-        _logger.LogInformation("Fetching orders from API.");
-        var orderResponse = await _httpService.HttpGet<PagedOrderResponse>($"orders?PageSize={10}&pageIndex={0}");
-        return orderResponse.Orders;
-    }
-
     public async Task<OrderItems> GetOrderItems(int orderId)
     {
         _logger.LogInformation("Fetching order items from API.");

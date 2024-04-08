@@ -38,6 +38,11 @@ public class OrderGetOrderItemsEndpoint : IEndpoint<IResult, OrderGetOrderItemsR
         var filterSpec = new OrderWithItemsByIdSpec(request.OrderId);
 
         var order = await orderRepository.FirstOrDefaultAsync(filterSpec);
+        
+        if(order == null)
+        {
+            return Results.NotFound($"Order with ID {request.OrderId} not found.");
+        }
 
         response.OrderItems = _mapper.Map<OrderItemsDto>(order);
         

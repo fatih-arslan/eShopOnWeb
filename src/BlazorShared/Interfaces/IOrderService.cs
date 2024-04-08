@@ -9,7 +9,6 @@ namespace BlazorShared.Interfaces;
 public interface IOrderService
 {
     Task<List<Order>> ListPaged(int pageSize, int pageIndex);
-    Task<List<Order>> ListPaged();
     Task<OrderItems> GetOrderItems(int orderId);
     Task<UpdateOrderResponse> UpdateOrder(UpdateOrderRequest request);
 }

@@ -28,9 +28,6 @@ public class HttpService
     {
         var url = $"{_apiUrl}{uri}";
 
-        //var response = await _httpClient.GetAsync(url);
-        //var jsonString = await response.Content.ReadAsStringAsync();
-
         try
         {
             var result = await _httpClient.GetAsync(url);

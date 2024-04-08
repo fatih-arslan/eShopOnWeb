@@ -30,7 +30,7 @@ public partial class Orders : BlazorComponent
     {
         if (firstRender)
         {
-            orders = await OrderService.ListPaged();
+            orders = await OrderService.ListPaged(pageSize: 10, pageIndex: 0);
 
             CallRequestRefresh();
         }
@@ -40,7 +40,7 @@ public partial class Orders : BlazorComponent
 
     private async Task ReloadOrders()
     {
-        orders = await OrderService.ListPaged();
+        orders = await OrderService.ListPaged(pageSize: 10, pageIndex: 0);
         StateHasChanged();
     }
 

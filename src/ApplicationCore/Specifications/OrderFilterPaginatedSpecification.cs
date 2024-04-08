@@ -19,5 +19,6 @@ public class OrderFilterPaginatedSpecification : Specification<Order>
             .Where(o => (buyerId == null || o.BuyerId == buyerId))
             .Skip(skip).Take(take);
         Query.Include(o => o.OrderItems);
+
     }
 }
